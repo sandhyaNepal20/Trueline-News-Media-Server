@@ -4,6 +4,10 @@ const UserRouter = require("./routes/UserRoute")
 const CategoryRouter = require("./routes/CategoryRoute")
 const NewsRouter = require("./routes/NewsRoute")
 const CommentRouter = require("./routes/CommentRoute")
+const InteractionsRouter = require("./routes/InteractionsRoute")
+
+const NotificationsRouter = require("./routes/NotificationsRoute")
+
 
 const app = express();
 
@@ -14,6 +18,10 @@ app.use("/api/user", UserRouter);
 app.use("/api/news", NewsRouter);
 app.use("/api/category", CategoryRouter);
 app.use("/api/comment", CommentRouter);
+app.use("/api/interactions", InteractionsRouter);
+
+app.use("/api/notifications", NotificationsRouter);
+
 
 
 const port = 3000;

@@ -4,14 +4,19 @@ const newsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
     },
-    cateoriesId: {
+    categoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "categories"
     },
+
     title: {
         type: String,
         required: true,
         unique: true
+    },
+    image: {
+        type: String,
+        required: true
     },
     content: {
         type: String,
@@ -21,10 +26,7 @@ const newsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    image: {
-        type: String,
-        required: true
-    }
+
 })
 
 const news = mongoose.model("news_article", newsSchema)
