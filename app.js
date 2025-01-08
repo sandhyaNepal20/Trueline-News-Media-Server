@@ -4,7 +4,7 @@ const UserRouter = require("./routes/UserRoute")
 const CategoryRouter = require("./routes/CategoryRoute")
 const NewsRouter = require("./routes/NewsRoute")
 const CommentRouter = require("./routes/CommentRoute")
-const InteractionsRouter = require("./routes/InteractionsRoute")
+const ShareRoute = require("./routes/ShareRoute")
 
 const NotificationsRouter = require("./routes/NotificationsRoute")
 
@@ -18,7 +18,7 @@ app.use("/api/user", UserRouter);
 app.use("/api/news", NewsRouter);
 app.use("/api/category", CategoryRouter);
 app.use("/api/comment", CommentRouter);
-app.use("/api/interactions", InteractionsRouter);
+app.use("/api/share", ShareRoute);
 
 app.use("/api/notifications", NotificationsRouter);
 
