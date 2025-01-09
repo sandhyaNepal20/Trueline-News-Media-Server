@@ -2,6 +2,21 @@ const express = require("express");
 const { findAll, save, findbyId, deletebyId, update } = require("../controller/NewsController");
 const router = express.Router();
 
+
+// const multer = require("multer");
+// const UserValidation = require("../validation/UserValidation");
+// const { authenticateToken, authorizeRole } = require("../security/Auth");
+
+// const storage = multer.diskStorage({
+//     destination: function (req, res, cb) {
+//         cb(null, 'user_images')
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.originalname)
+//     }
+// })
+// const upload = multer({ storage })
+
 router.get("/", findAll);
 router.post("/", save);
 router.get("/:id", findbyId)
