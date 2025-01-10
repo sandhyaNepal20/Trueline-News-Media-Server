@@ -2,7 +2,7 @@ const express = require("express");
 const { findAll, save, findbyId, deletebyId, update } = require("../controller/UserController");
 const UserValidation = require("../validation/UserValidation");
 const router = express.Router();
-const { authenticateToken } = require("../security/Auth");
+// const { authenticateToken } = require("../security/Auth");
 
 
 const multer = require("multer");
@@ -19,9 +19,9 @@ const upload = multer({ storage })
 
 
 
-router.get("/", authenticateToken, findAll);
+router.get("/", findAll);
 router.post("/", upload.single('file'), save);
-router.get("/:id", authenticateToken, findbyId)
+router.get("/:id", findbyId)
 router.delete("/:id", deletebyId)
 router.put("/:id", update)
 

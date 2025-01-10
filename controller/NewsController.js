@@ -2,7 +2,7 @@ const News = require("../model/News");
 const { param } = require("../routes/NewsRoute");
 const findAll = async (req, res) => {
     try {
-        const news = await News.find();
+        const news = await News.find().populate(["userId", "categoryId"]);
         res.status(200).json(news);
     } catch (e) {
         res.json(e)
