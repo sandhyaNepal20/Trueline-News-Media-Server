@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const newsSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "users"
+        ref: "Student"
     },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,

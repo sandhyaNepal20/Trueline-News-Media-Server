@@ -12,10 +12,10 @@ const findAll = async (req, res) => {
 
 const save = async (req, res) => {
     try {
-        const { full_name, email, password } = req.body;
+        const { fullName, email, password } = req.body;
 
         const user = new User({
-            full_name,
+            fullName,
             email,
             password,
             image: req.file?.originalname,

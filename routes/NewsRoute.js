@@ -1,27 +1,25 @@
 const express = require("express");
-const { findAll, save, findbyId, deletebyId, update } = require("../controller/NewsController");
+const { findAll, save, findbyId, deletebyId, update, findByCategory } = require("../controller/NewsController");
 const router = express.Router();
 
 
-// const multer = require("multer");
-// const UserValidation = require("../validation/UserValidation");
-// const { authenticateToken, authorizeRole } = require("../security/Auth");
+const multer = require("multer")
+const storage = multer.diskStorage({
+    destination: function (req, res, cb) {
+        cb(null, 'news_image')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+const upload = multer({ storage })
 
-// const storage = multer.diskStorage({
-//     destination: function (req, res, cb) {
-//         cb(null, 'user_images')
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, file.originalname)
-//     }
-// })
-// const upload = multer({ storage })
-
-router.get("/", findAll);
-router.post("/", save);
+router.get("/getAll", findAll);
+router.post("/save", upload.single('file'), save);
 router.get("/:id", findbyId)
 router.delete("/:id", deletebyId)
 router.put("/:id", update)
+router.get("/category/:categoryId", findByCategory);
 
 
 module.exports = router;
