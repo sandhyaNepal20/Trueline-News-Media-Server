@@ -135,7 +135,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
 });
 
 
-// @desc    Create new student
+
 
 
 exports.register = asyncHandler(async (req, res, next) => {
@@ -154,7 +154,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc   Login student
+// @desc   Login 
 
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body.data;
@@ -175,6 +175,63 @@ exports.login = asyncHandler(async (req, res, next) => {
 
   sendTokenResponse(student, 200, res, student.role);
 });
+
+const sendTokenResponse = (student, statusCode, res, role) => {
+  const token = student.getSignedJwtToken(); // Generate JWT Token
+
+  const options = {
+    // Cookie will expire in 30 days
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+    httpOnly: true, // Ensures cookie can't be accessed via JavaScript
+  };
+
+  // Use secure cookies only in production
+  if (process.env.NODE_ENV === "production") {
+    options.secure = true;
+    options.sameSite = "None"; // Required for cross-origin cookies in HTTPS
+  }
+
+  // Create cookie and send response
+  res
+    .status(statusCode)
+    .cookie("token", token, options) // Set cookie
+    .json({
+      success: true,
+      token, // Return token in JSON as well
+      user: {
+        id: student._id,
+        fullName: student.fullName,
+        email: student.email,
+        role: student.role,
+        profileImage: student.profileImage || "", // ✅ Include profile image
+      },
+    });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -407,36 +464,4 @@ exports.uploadImage = asyncHandler(async (req, res, next) => {
     data: req.file.filename,
   });
 });
-
-const sendTokenResponse = (student, statusCode, res, role) => {
-  const token = student.getSignedJwtToken(); // Generate JWT Token
-
-  const options = {
-    // Cookie will expire in 30 days
-    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
-    httpOnly: true, // Ensures cookie can't be accessed via JavaScript
-  };
-
-  // Use secure cookies only in production
-  if (process.env.NODE_ENV === "production") {
-    options.secure = true;
-    options.sameSite = "None"; // Required for cross-origin cookies in HTTPS
-  }
-
-  // Create cookie and send response
-  res
-    .status(statusCode)
-    .cookie("token", token, options) // Set cookie
-    .json({
-      success: true,
-      token, // Return token in JSON as well
-      user: {
-        id: student._id,
-        fullName: student.fullName,
-        email: student.email,
-        role: student.role,
-      },
-    });
-};
-
 

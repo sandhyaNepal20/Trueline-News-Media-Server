@@ -46,6 +46,7 @@ app.use("/api/auth", AuthRouter);
 app.use("/api/notifications", NotificationsRouter);
 app.use("/api/users", auth);
 app.use("/news_image", express.static("news_image"))
+app.use("/public/uploads", express.static("uploads"))
 
 
 

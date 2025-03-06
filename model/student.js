@@ -13,13 +13,13 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    unique: true, // ✅ Ensures emails are unique
+    match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
   },
-
   image: {
     type: String,
-    default: null,
+    default: "https://example.com/default-profile.png", // ✅ Default profile image
   },
-
   password: {
     type: String,
     required: true,
@@ -27,47 +27,53 @@ const studentSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default: 0
+    default: "user", // ✅ Use a meaningful default role
+    enum: ["user", "admin"], // ✅ Ensures only valid roles
   },
-
-
 });
 
-// Encrypt password using bcrypt
+// 🔐 Hash password before saving to database
 studentSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
+  if (!this.isModified("password")) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
     next();
+  } catch (error) {
+    next(error);
   }
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Sign JWT and return
+// 🔑 Generate JWT Token including user details
 studentSchema.methods.getSignedJwtToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
-    //expiresIn: 5,
-  });
+  return jwt.sign(
+    {
+      id: this._id,
+      fullName: this.fullName,
+      email: this.email,
+      role: this.role,
+      image: this.image, // ✅ Include profile image in JWT
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRE }
+  );
 };
 
-// Match user entered password to hashed password in database
+// 🔐 Compare entered password with hashed password
 studentSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Generate and hash password token
+// 🔄 Generate and hash password reset token
 studentSchema.methods.getResetPasswordToken = function () {
-  // Generate token
   const resetToken = crypto.randomBytes(20).toString("hex");
 
-  // Hash token and set to resetPasswordToken field
   this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
 
-  // Set expire
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes expiration
 
   return resetToken;
 };
